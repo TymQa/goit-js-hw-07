@@ -1,28 +1,36 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-let gallery = document.querySelector(".gallery");
+const fatherImages = document.querySelector(".gallery");
+const imgMarkUp = onImagesCards(galleryItems);
 
-gallery.insertAdjacentHTML(
-    "afterbegin",
-    galleryItems
-    .map(
-        ({ preview, original, description }) =>
-        `<li class="gallery__item">
-            <a class="gallery__link" href="${original}">
-                <img class="gallery__image" src="${preview}" alt"${description}" />
-            </a>
-        </li>`
-    )
-    .join("")
-);
+function onImagesCards(imgs) {
+    return imgs
+    .map(({ preview, original, description }) => {
+        return `
+    <li class="gallery__item">
+    <a class="gallery__link" href="${original}">
+        <img class="gallery__image" src="${preview}" alt="${description}" />
+    </a>
+    </li>
+    `;
+    })
+    .join("");
+}
+fatherImages.insertAdjacentHTML("afterbegin", imgMarkUp);
 
-new SimpleLightbox(".gallery a" , {
-    overlayOpacity: 0.5,
-    captionDelay: 250,
+fatherImages.addEventListener("click", openImgs);
+
+function openImgs(event) {
+    event.preventDefault();
+
+    if (event.target.nodeName !== "IMG") {
+    return;
+    }
+
+    const lightbox = new SimpleLightbox(".gallery a", {
     captionsData: "alt",
-    fadeSpeed: 250,
-    rtl: true,
-});
-
-console.log(galleryItems);
+    captionPosition: "bottom",
+    captionDelay: 250,
+    });
+}
